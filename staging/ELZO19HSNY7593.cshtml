@@ -1,0 +1,124 @@
+﻿
+@page
+@using System.Net.Mail;
+@using System.IO;
+@using System.Web;
+
+
+@{
+    //default from address
+    var fromEmail = "no-reply@hsdigitalsolutions.com";
+    //default to email address
+    var toEmail = "rasanchez@omnicomhealthgroup.com";
+    //subject line
+    var subject = "Test";
+    //path to your email source
+    var filePath = String.Format(@"{0}\{1}", Environment.CurrentDirectory.ToString().Replace(@"_mailapp", ""), @"ELZO19HSNY7593\index.html");
+    var errorMessage = "";
+    var debuggingFlag = true;
+    try
+    {
+
+        SmtpClient client = new SmtpClient("smtpha.teamcds.com");
+
+
+        using (StreamReader reader = System.IO.File.OpenText(filePath))
+        {
+            MailMessage m = new MailMessage();
+            m.From = new MailAddress(fromEmail);
+
+            //TO addresses
+            m.To.Add(toEmail);
+
+
+            //Litmus Testing 
+            //m.To.Add("mscg@litmustest.com");
+
+            //Quality Control 
+            //m.To.Add("Mscg.review.metrics@gmail.com");
+            //m.To.Add("amirza@omnicomhealthgroup.com");
+
+            //Project Management 
+            //m.To.Add("bszerszunowicz@harrisonandstar.com");
+            
+            //m.To.Add("probinson@harrisonandstar.com");
+            //m.To.Add("pauletterobinson@gmail.com");
+            
+            //m.To.Add("dtillinger@harrisonandstar.com");
+            //m.To.Add("darentillinger@gmail.com");
+
+            //m.To.Add("ggallucci@harrisonandstar.com");
+            //m.To.Add("gallucgl@gmail.com");
+            
+            //m.To.Add("ehuanca@harrisonandstar.com");
+            //m.To.Add("huanca.edith@gmail.com");
+            //m.To.Add("joboshko@harrisonandstar.com");
+            //m.To.Add("joeb2038@gmail.com");
+			//m.To.Add("josue.lopez17@gmail.com");
+			
+            //devs
+            //m.To.Add("ebeltran@omnicomhealthgroup.com");
+            //m.To.Add("jwang@harrisonandstar.com");
+            //m.To.Add("asiu@omnicomhealthgroup.com");
+            //m.To.Add("dbowers@omnicomhealthgroup.com");
+            //m.To.Add("bowersdv@gmail.com");
+            //m.To.Add("ceng@harrisonandstar.com");
+            //m.To.Add("caroleng@gmail.com");
+            //m.To.Add("tbovo@harrisonandstar.com");
+            //m.To.Add("tombovo@gmail.com");
+            //m.To.Add("acondarco@gmail.com");
+            //m.To.Add("acondarco@omnicomhealthgroup.com");
+
+            //QA
+            //m.To.Add("arojas@omnicomhealthgroup.com");
+            //m.To.Add("thehangarcr@gmail.com");
+            //m.To.Add("thehangarcr@yahoo.com");
+            //m.To.Add("thehangarcr@outlook.com");
+
+
+            //CC addresses
+            //m.CC.Add("test@domain1.com");
+            //m.CC.Add("test@domain2.com");
+
+
+            //BCC addresses
+            //m.Bcc.Add("test@domain1.com");
+            //m.Bcc.Add("test@domain2.com");
+
+            m.IsBodyHtml = System.IO.Path.GetExtension(filePath).ToUpper().Equals(".HTML");
+
+            m.Subject = subject;
+
+            m.Body = reader.ReadToEnd();        //load content from file
+
+            client.Send(m);
+        }
+
+    }
+    catch (Exception ex)
+    {
+        errorMessage = ex.Message;
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>.NET Razor (Email Assistance)</title>
+</head>
+<body>
+
+    @if (errorMessage == "")
+    {
+        <p>An email message has been sent.</p>
+    }
+    else
+    {
+        <p><b>Error - Email was <em>not</em> sent.</b></p>
+        if (debuggingFlag)
+        {
+        <p>The following error was reported:</p>
+        <p><em>@errorMessage</em></p>
+        }
+    }
+</body>
+</html>
